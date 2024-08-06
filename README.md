@@ -66,20 +66,71 @@ Functionalities for the api
       - taskId (string): The ID of the completed task.
       - (other fields might depend on your implementation)
 
-- **POST /tasks/:id**
+#### GET /tasks/:id
 
-  - Description: Retrieves details for a specific task.
-  - Request Parameters:
-    - id (required, string): The unique identifier of the task.
-  - Response:
-    - status (number): HTTP Status code indicating the outcome of the request.
-      - 200: Success
-      - 404: Task not found
-      - 500: Internal server error
-    - data (object): The details of the requested task.
-      - status (string): The completion status of the task ("completed" or "pending").
-      - task (object): The task object containing the same properties as in the /tasks endpoint response.
+- **Description:** Retrieves details for a specific task.
+- **Request Parameters:**
+  - `id` (required, string): The unique identifier of the task.
+- **Response:**
+  - `status` (number): HTTP Status code indicating the outcome of the request.
+    - 200: Success
+    - 404: Task not found
+    - 500: Internal server error
+  - `data` (object): The details of the requested task.
+    - `status` (string): The completion status of the task ("completed" or "pending").
+    - `task` (object): The task object containing the following properties:
+      - `id` (string): The unique identifier of the task.
+      - `title` (string): The title of the task.
+      - `description` (string): The description of the task.
+      - `image` (string, optional): The image URL associated with the task (if any).
+      - `sponsor` (string, optional): The sponsor of the task (if any).
+      - `reward` (number): The reward offered for completing the task.
+      - `url` (string, optional): A URL associated with the task (if any).
+      - `valid` (boolean): A flag indicating if the task is currently active.
 
-- **POST /task/:id/edit**
-  - Description: Edits the details of a specific task. (This functionality might be restricted based on your project's logic)
-  - Request Parameters:
+#### POST /task/:id/edit
+
+- **Description:** Edits the details of a specific task. (This functionality might be restricted based on your project's logic)
+- **Request Parameters:**
+  - `id` (required, string): The unique identifier of the task.
+- **Request Body:**
+  - `image` (optional, string): The new image URL for the task.
+  - `description` (optional, string): The updated description of the task.
+  - `title` (optional, string): The updated title of the task.
+  - `reward` (optional, number): The updated reward for completing the task.
+  - `url` (optional, string): The updated URL associated with the task.
+  - `valid` (optional, boolean): A flag indicating if the task should be active or inactive.
+  - `sponsor` (optional, string): The updated sponsor of the task.
+- **Response:**
+  - `status` (number): HTTP Status code indicating the outcome of the request.
+    - 200: Task updated successfully
+    - 404: Task not found
+    - 500: Internal server error
+  - `message` (string): A message indicating the result of the request ("Task has been updated" or "Failed to update task").
+
+#### POST /task/:id/delete
+
+- **Description:** Deletes a specific task. (This functionality might be restricted based on your project's logic)
+- **Request Parameters:**
+  - `id` (required, string): The unique identifier of the task.
+- **Response:**
+  - `status` (number): HTTP Status code indicating the outcome of the request.
+    - 200: Task deleted successfully
+    - 404: Task not found
+    - 500: Internal server error
+
+### Score Endpoint
+
+#### POST /score/add/:id
+
+- **Description:** Updates the score of a user.
+- **Request Parameters:**
+  - `id` (required, number): The Telegram user ID of the user.
+- **Request Body:**
+  - `points` (required, number): The number of points to add to the user's score.
+  - `action` (required, string): The action to perform on the score ("add", "replace", or "deduct").
+- **Response:**
+  - `status` (number): HTTP Status code indicating the outcome of the request.
+    - 200: Score updated successfully
+    - 404: User not found
+    - 500: Internal server error
