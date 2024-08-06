@@ -1,7 +1,7 @@
 import Task from "../models/task";
 import TaskCompletion from "../models/taskCompletion";
 
-const all = async (): Promise<{
+export const allTasks = async (): Promise<{
   status: number;
   tasks?: (typeof Task)[];
 }> => {
@@ -15,7 +15,7 @@ const all = async (): Promise<{
   }
 };
 
-const completed = async (
+export const completedTasks = async (
   telegramId: number
 ): Promise<{ status: number; tasks?: (typeof TaskCompletion)[] }> => {
   try {
@@ -42,6 +42,78 @@ const completed = async (
 //   } catch (error) {}
 // };
 
-module.exports = {
-  tasks: { all, completed },
+export const taskData = async (
+  id: string
+): Promise<{ status: number; task?: typeof Task }> => {
+  try {
+    const task = await Task.findById(id);
+    if (!task) return { status: 404 };
+    return { status: 200, task };
+  } catch (error) {
+    console.log(error);
+    return { status: 500 };
+  }
+};
+
+export const createTask = async ({
+  title,
+  description,
+  image,
+  sponsor,
+  reward,
+  url,
+}: {
+  title: string;
+  description: string;
+  image: string;
+  sponsor: string;
+  url: string;
+  reward: number;
+}): Promise<200 | 500> => {
+  try {
+    const task = new Task({
+      title,
+      description,
+      image,
+      sponsor,
+      reward,
+      url,
+    });
+    task.save();
+
+    return 200;
+  } catch (error) {
+    return 500;
+  }
+};
+
+export const deleteTask = async (id: string): Promise<200 | 500> => {
+  try {
+    await Task.findByIdAndDelete(id);
+    return 200;
+  } catch (error) {
+    return 500;
+  }
+};
+
+export const editTask = async ({
+  id,
+  image,
+  description,
+  title,
+  reward,
+  url,
+  sponsor,
+}: {
+  id: string;
+  image?: string;
+  description?: string;
+  title?: string;
+  reward?: number;
+  url?: string;
+  sponsor?: string;
+}): Promise<200 | 500> => {
+  try {
+    const taskEdit = await Task.findByIdAndUpdate();
+  } catch (error) {}
 };
