@@ -1,4 +1,4 @@
-import express, { response } from "express";
+import express, { type Express } from "express";
 import {
   createAccount,
   getProfile,
@@ -13,7 +13,7 @@ import {
   taskData,
 } from "./helpers/tasks";
 
-const app = express();
+const app: Express = express();
 
 app.get("/user/:id", async (req, res) => {
   const id = parseInt(req.params.id);
