@@ -95,4 +95,6 @@ app.post("/score/add/:id", async (req, res) => {
 
 export default app;
 
+const port = process.env.PORT || 8080;
+
 app.listen(port, () => console.log(`Listening on port ${port}...`));
