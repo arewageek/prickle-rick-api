@@ -1,6 +1,16 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
-const TaskSchema = new Schema(
+export interface ITask extends Document {
+  title: string;
+  description: string;
+  image?: string;
+  sponsor?: string;
+  reward: number;
+  url?: string;
+  valid: boolean;
+}
+
+const TaskSchema: Schema = new Schema(
   {
     title: { type: String, require: true },
     description: { type: String, require: true },
@@ -13,5 +23,5 @@ const TaskSchema = new Schema(
   { timestamps: true }
 );
 
-const Task = mongoose.models.Task || mongoose.model("Task", TaskSchema);
+const Task = mongoose.models.Task || mongoose.model<ITask>("Task", TaskSchema);
 export default Task;

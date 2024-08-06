@@ -103,6 +103,7 @@ export const editTask = async ({
   title,
   reward,
   url,
+  valid,
   sponsor,
 }: {
   id: string;
@@ -111,9 +112,22 @@ export const editTask = async ({
   title?: string;
   reward?: number;
   url?: string;
+  valid?: boolean;
   sponsor?: string;
 }): Promise<200 | 500> => {
   try {
-    const taskEdit = await Task.findByIdAndUpdate();
-  } catch (error) {}
+    await Task.findByIdAndUpdate(id, {
+      image,
+      reward,
+      title,
+      description,
+      sponsor,
+      url,
+    });
+
+    return 200;
+  } catch (error) {
+    console.log(error);
+    return 500;
+  }
 };
