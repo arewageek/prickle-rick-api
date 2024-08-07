@@ -1,4 +1,5 @@
-import express, { type Express } from "express";
+import express from "express";
+
 import {
   createAccount,
   getProfile,
@@ -13,7 +14,10 @@ import {
   taskData,
 } from "./helpers/tasks";
 
-const app: Express = express();
+const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/user/:id", async (req, res) => {
   const id = parseInt(req.params.id);
@@ -31,17 +35,20 @@ app.get("/user/:id/referrals", async (req, res) => {
 });
 
 app.post("/user/create", async (req, res) => {
-  const { tgId, referredBy } = req.body();
-  const response = await createAccount({ tgId, referredBy });
-  return res.json(response);
+  console.log({ body: req.query });
+  // const response = { status: 200 };
+  const { tgId, referredBy } = req.body;
+  const response = await createAccount({
+    tgId: tgId as unknown as number,
+    referredBy: referredBy as string,
+  });
+  const { body } = req;
+  console.log({ req, body });
+  return res.json({ msg: body });
 });
 
-// app.post("/bot/message", async (req, res) => {
-
-// });
-
 app.get("/tasks", async (req, res) => {
-  const { telegramId } = req.body();
+  const { telegramId } = req.body;
 
   const all = await allTasks();
   const taskCompletion = await completedTasks(telegramId);
@@ -58,7 +65,7 @@ app.post("/tasks/:id", async (req, res) => {
 
 app.post("/task/:id/edit", async (req, res) => {
   const id = req.params.id;
-  const { title, description, sponsor, reward, url, valid, image } = req.body();
+  const { title, description, sponsor, reward, url, valid, image } = req.body;
 
   const response = await editTask({
     id,
@@ -86,7 +93,7 @@ app.post("/task/:id/delete", async (req, res) => {
 
 app.post("/score/add/:id", async (req, res) => {
   const telegramId = parseInt(req.params.id);
-  const { points, action } = req.body();
+  const { points, action } = req.body;
 
   const response = await updateScore({ telegramId, points, action });
 
